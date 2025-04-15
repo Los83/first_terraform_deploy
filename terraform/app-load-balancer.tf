@@ -5,9 +5,6 @@ resource "aws_lb" "app-lb" {
   name                       = "app-lb"
   security_groups            = [aws_security_group.lb.id]
   subnets                    = module.vpc.public_subnets
-  tags = {
-    Name = "ecs-alb"
-  }
 }
 resource "aws_lb_listener" "http-listener" {
   load_balancer_arn = aws_lb.app-lb.arn
@@ -35,6 +32,10 @@ resource "aws_lb_target_group" "lb-target-group" {
     interval            = 20
     # matcher             = 200
     protocol = "HTTP"
+  }
+
+  tags = {
+    name = "lma"
   }
 }
 resource "aws_security_group" "lb" {

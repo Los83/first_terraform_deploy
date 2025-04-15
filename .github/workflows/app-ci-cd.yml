@@ -15,7 +15,7 @@ on:
     #   - ".github/workflows/app-ci-cd.yml"
 env:
   AWS_REGION: us-east-1 # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: box
+  ECR_REPOSITORY: web-app
 permissions: read-all
 jobs:
   build:
@@ -149,6 +149,7 @@ jobs:
         run: |
           terraform plan -no-color -input=false \
           -var="image_tag=${{ env.IMAGE_ID }}" \
+          -var="ecr_repository=${{ env.ECR_REPOSITORY }}" \
           -out=TFplan.JSON
         continue-on-error: true
 
@@ -188,4 +189,5 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           terraform apply -auto-approve -input=false \
+          -var="ecr_repository=${{ env.ECR_REPOSITORY }}" \
           -var="image_tag=${{ env.IMAGE_ID }}"

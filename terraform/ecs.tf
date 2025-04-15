@@ -16,8 +16,9 @@ resource "aws_ecs_task_definition" "task-definition" {
 
   container_definitions = jsonencode([
     {
+      # image     = "${aws_ecr_repository.repository.repository_url}:latest"
       name      = "web-app"
-      image     = "${aws_ecr_repository.repository.repository_url}:latest"
+      image     = "${var.ecr_repository}:${var.image_tag}"
       essential = true
       portMappings = [
         {
@@ -89,7 +90,7 @@ resource "aws_ecs_service" "ecs-service" {
 }
 
 resource "aws_ecs_capacity_provider" "capacity-provider" {
-  name = "capacity-provider"
+  name = "tf-capacity-provider"
 
   auto_scaling_group_provider {
     auto_scaling_group_arn = aws_autoscaling_group.asg.arn
